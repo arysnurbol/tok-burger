@@ -17,7 +17,7 @@ const facts = [
   },
   {
     big: String(branches.length),
-    title: "Қаланың әр жағында",
+    title: "Қаланың әр аймағында",
     text: `${restaurants.map((b) => b.name).join(", ")} және жеткізу нүктесі. Ең жақынын төменнен табыңыз.`,
   },
   {
