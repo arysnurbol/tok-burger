@@ -1,26 +1,69 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Sampled from the official logo: #F76103 */
+  --color-tok: #f76103;
+  --color-tok-deep: #c94c00;
+  --color-char: #21140c; /* grill char — dark sections */
+  --color-char-2: #2e1d12;
+  --color-bun: #fff1e2; /* toasted bun — light sections */
+  --color-ink: #1d120b;
+  --color-cheese: #ffc23d;
+
+  --font-display: var(--font-display-face), system-ui, sans-serif;
+  --font-sans: var(--font-body-face), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-char);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-cheese);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* One orchestrated moment: the hero bolt strikes once on load. */
+@keyframes strike {
+  0% { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes flash {
+  0%, 100% { filter: none; }
+  40% { filter: drop-shadow(0 0 28px rgb(255 194 61 / 0.9)); }
+}
+/* Hero text moves but never starts invisible, so LCP is not delayed. */
+@keyframes rise {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
+.hero-enter { animation: rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.hero-enter-late { animation: rise 700ms 120ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.hero-mark { animation: strike 800ms 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both, flash 900ms 900ms ease-out both; }
+
+/* Progressive scroll reveal, CSS only — no JS cost. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: strike linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
